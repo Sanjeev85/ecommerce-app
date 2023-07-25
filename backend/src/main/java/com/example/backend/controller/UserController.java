@@ -16,7 +16,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
-//@CrossOrigin(origins = "http://localhost:3000/", allowedHeaders = "*", allowCredentials = "true", methods = RequestMethod.POST)
 public class UserController {
     private final UserRepo userRepo;
     private final AuthService authService;

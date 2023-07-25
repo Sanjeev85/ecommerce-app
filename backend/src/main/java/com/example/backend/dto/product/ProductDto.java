@@ -2,7 +2,9 @@ package com.example.backend.dto.product;
 
 
 import com.example.backend.models.Product;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProductDto {
 
     private Integer id;

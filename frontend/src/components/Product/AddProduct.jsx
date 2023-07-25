@@ -2,24 +2,26 @@ import {
   Autocomplete,
   Button,
   Card,
-  Input,
   OutlinedInput,
   TextField,
   Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Login from '../Users/Login';
+import axios from 'axios';
 
+let category_map = new Map();
 function AddProduct() {
   const [categories, setCategories] = useState([]);
-  const [categoryId, setCategoryId] = useState([{}]);
-  const [formData, setFormData] = useState({
-    id: '',
+  const [selectedImage, setSelectedImage] = useState(null);
+  // const [category, setcategory] = useState('');
+  // const [categoryId, setCategoryId] = useState(0);
+
+  const [productDto, setproductDto] = useState({
     name: '',
-    imageUrl: '',
     price: 0,
     description: '',
-    category: '',
+    categoryId: null,
   });
   const token = localStorage.getItem('token');
 
@@ -31,13 +33,13 @@ function AddProduct() {
         const jsonData = await res.json();
 
         const updated_category = [];
-        const category_map = [{}];
+        // const category_map = [{}];
         jsonData.forEach((element) => {
           updated_category.push(element.categoryName);
-          category_map.push({ category: element.categoryName, id: element.id });
+          category_map.set(element.categoryName, element.id);
         });
+
         setCategories((categories) => updated_category);
-        setCategoryId((categoryId) => category_map);
       } catch (err) {
         console.log(err);
       }
@@ -47,20 +49,40 @@ function AddProduct() {
   }, []);
 
   if (!token) return <Login />;
+  console.log(token);
+
+  const fileHandleChange = (event) => {
+    setSelectedImage(event.target.files[0]);
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
+    setproductDto((prevproductDto) => ({
+      ...prevproductDto,
       [name]: value,
     }));
   };
 
-  // request making to localhost:8080
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(e);
-    // setFormData(e.);
+  const handleSubmit = async (e) => {
+    const formData = new FormData();
+    formData.append('file', selectedImage);
+    formData.append('productDto', JSON.stringify(productDto));
+
+    try {
+      const response = await axios.post(
+        'http://localhost:8080/product/add',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      console.log('Response:', response.data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (
@@ -70,6 +92,7 @@ function AddProduct() {
           display: 'flex',
           flexDirection: 'column',
           margin: '80px',
+          borderBlockColor: 'black',
         }}>
         <Typography
           variant='h5'
@@ -81,29 +104,34 @@ function AddProduct() {
           name='name'
           sx={{ margin: '5px' }}
           onChange={handleChange}
-          value={formData.name}
+          value={productDto.name}
         />
         <TextField
           name='description'
           label='Product Description'
-          value={formData.description}
+          value={productDto.description}
           sx={{ margin: '5px' }}
           onChange={handleChange}
         />
+
         <Autocomplete
           disablePortal
           id='combo-box-demo'
           options={categories}
           sx={{ margin: '5px' }}
-          value={formData.category}
           renderInput={(params) => (
             <TextField
               {...params}
-              label='Category'
+              label='Categories'
             />
           )}
           name='category'
-          onChange={handleChange}
+          onChange={(event, value) => {
+            setproductDto((prevproductDto) => ({
+              ...prevproductDto,
+              categoryId: category_map.get(value),
+            }));
+          }}
         />
 
         <OutlinedInput
@@ -111,8 +139,8 @@ function AddProduct() {
           type='file'
           label='Product'
           name='imageUrl'
-          onChange={handleChange}
-          value={formData.imageUrl}
+          onChange={fileHandleChange}
+          value={productDto.imageUrl}
         />
         <TextField
           sx={{ margin: '5px' }}
@@ -120,7 +148,7 @@ function AddProduct() {
           type='number'
           name='price'
           onChange={handleChange}
-          value={formData.price}
+          value={productDto.price}
         />
         <Button
           style={{ margin: '5px' }}

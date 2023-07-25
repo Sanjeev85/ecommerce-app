@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/category")
-@CrossOrigin(origins = ["http://localhost:3000/"], allowedHeaders = ["*"])
 class CategoryController {
     @Autowired
     private lateinit var categoryService: CategoryService
@@ -27,7 +26,6 @@ class CategoryController {
     @GetMapping("/")
     fun getCategories(): ResponseEntity<List<Category>> {
         val body = categoryService.listCategories();
-        logger.info("$body")
         return ResponseEntity(body, HttpStatus.OK)
     }
 
