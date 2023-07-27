@@ -28,6 +28,11 @@ function App() {
         style={{ margin: '5px' }}>
         Products Page
       </Link>
+      <Link
+        to={`view`}
+        style={{ margin: '5px' }}>
+        View Product
+      </Link>
     </div>
   );
 }

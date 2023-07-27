@@ -14,8 +14,6 @@ let category_map = new Map();
 function AddProduct() {
   const [categories, setCategories] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
-  // const [category, setcategory] = useState('');
-  // const [categoryId, setCategoryId] = useState(0);
 
   const [productDto, setproductDto] = useState({
     name: '',

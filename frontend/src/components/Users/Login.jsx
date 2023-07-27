@@ -83,11 +83,7 @@ function Login() {
           <Typography>Sign In</Typography>
         </Button>
         <Link to={`../SignUp`}>New User</Link>
-        {token.toString().length > 1 ? (
-          <Alert severity='info'>{token}</Alert>
-        ) : (
-          <></>
-        )}
+        {token ? <Alert severity='info'>{token}</Alert> : <></>}
       </form>
     </Card>
   );

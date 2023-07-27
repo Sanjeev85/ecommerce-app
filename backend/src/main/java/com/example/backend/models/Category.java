@@ -1,7 +1,10 @@
 package com.example.backend.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,18 +17,23 @@ import java.util.Set;
 @Entity
 @Table(name = "category")
 public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
 
-    private String categoryName;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    private String description;
-    private String imageUrl;
+	@Column(name = "category_name")
+	private @NotBlank String categoryName;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
-    Set<Product> products;
+	private @NotBlank String description;
+
+	private @NotBlank String imageUrl;
+
+	// add imageURL here
+
+	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY,
+			cascade = CascadeType.ALL)
+	Set<Product> products;
 
     public Integer getId() {
         return id;

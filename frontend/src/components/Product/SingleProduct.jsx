@@ -16,7 +16,7 @@ function SingleProduct({ product }) {
         <CardMedia
           component='img'
           height='140'
-          image='./images/image.jpg'
+          image={product.imageURL}
           alt='green iguana'
         />
         <CardContent>
@@ -25,13 +25,10 @@ function SingleProduct({ product }) {
             variant='h5'
             component='div'>
             {product.name}
-            {/* dummy Product */}
           </Typography>
           <Typography
             variant='body2'
             color='text.secondary'>
-            {/* Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica */}
             {product.description}
           </Typography>
         </CardContent>

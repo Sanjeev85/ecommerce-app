@@ -1,14 +1,18 @@
 package com.example.backend.services
 
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
+import java.awt.image.BufferedImage
 import java.io.File
 import java.io.IOException
 import java.util.UUID
+import javax.imageio.ImageIO
 
+@Service
 class FileUploadService {
-    val logger = LoggerFactory.getLogger(javaClass)
+    val logger = LoggerFactory.getLogger(FileUploadService::class.java)
     private val UPLOAD_DIR = "images"
 
     fun uploadImage(file: MultipartFile) : String {
@@ -21,6 +25,7 @@ class FileUploadService {
 
             // save file to images folder
             val destFileName = "${uploadDir.absolutePath}${File.separator}${UUID.randomUUID()}${file.originalFilename}"
+            logger.warn("reached here at file upload service")
             val destFile = File(destFileName)
             file.transferTo(destFile)
             val fileUri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -35,9 +40,9 @@ class FileUploadService {
         }
     }
 
-    fun getFileExtension(fileName: String): String {
-        val lastDotPosition: Int = fileName.lastIndexOf('.')
-        return fileName.substring(lastDotPosition)
+    fun readImages(path: String): BufferedImage? {
+        val folderImage = File(path)
+        return ImageIO.read(folderImage)
     }
 }
 

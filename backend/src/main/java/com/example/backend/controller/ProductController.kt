@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import kotlin.jvm.Throws
 
 @RestController
 @RequestMapping("/product")
@@ -20,6 +21,8 @@ class ProductController {
     private lateinit var productService: ProductService
     @Autowired
     private lateinit var categoryService: CategoryService
+    @Autowired
+    private lateinit var fileUploadService: FileUploadService
 
     private val logger = LoggerFactory.getLogger(ProductController::class.java)
 
@@ -38,7 +41,7 @@ class ProductController {
         logger
             .error("product category id ${productDto.name}${productDto.description} cat id ${productDto.categoryId}")
         val optionalCategory = categoryService.readCategory(productDto.categoryId)
-        val imageUri = FileUploadService().uploadImage(file)
+        val imageUri = fileUploadService.uploadImage(file)
         productDto.imageURL = imageUri.split(' ')[1]
 
         logger.info("$optionalCategory")

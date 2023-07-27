@@ -14,9 +14,11 @@ public class AuthService {
     public AuthService(TokenRepo tokenRepo) {
         this.tokenRepo = tokenRepo;
     }
+
     public void saveConfirmationToken(AuthenticationToken authenticationToken) {
         tokenRepo.save(authenticationToken);
     }
+
     public AuthenticationToken getToken(User user) {
         return tokenRepo.findTokenByUser(user);
     }
@@ -37,6 +39,8 @@ public class AuthService {
         if (token == null) {
             throw new Exception("MessageStrings.AUTH_TOEKN_NOT_PRESENT");
         }
-        throw new Exception("MessageStrings.AUTH_TOEKN_NOT_VALID");
+        var findToken = tokenRepo.findTokenByToken(token);
+        if (findToken == null)
+            throw new Exception("MessageStrings.AUTH_TOEKN_NOT_VALID");
     }
 }
